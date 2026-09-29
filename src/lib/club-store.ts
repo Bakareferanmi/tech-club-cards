@@ -25,21 +25,28 @@ export const ROLES = [
 
 export const DEFAULT_SESSION = "2026 / 2027";
 
+export const CARDS_PER_SECTION = 10;
+
 export const SEED_MEMBER: Member = {
   uid: "seed-bakare",
   name: "Bakare Oluwaferanmi Pelumi",
-  memberId: "TECH1234",
+  memberId: "001",
   role: "Member",
   session: DEFAULT_SESSION,
 };
 
 export function nextMemberId(ids: string[]): string {
-  let max = 1000;
+  let max = 0;
   for (const id of ids) {
-    const match = /^TECH(\d+)$/i.exec(id.trim());
+    const match = /(\d+)\s*$/.exec(id.trim());
     if (match) max = Math.max(max, Number(match[1]));
   }
-  return `TECH${String(max + 1).padStart(4, "0")}`;
+  return String(max + 1).padStart(3, "0");
+}
+
+export function sectionOf(memberId: string): number {
+  const match = /(\d+)\s*$/.exec(memberId.trim());
+  return match ? Math.floor((Number(match[1]) - 1) / CARDS_PER_SECTION) + 1 : 1;
 }
 
 type ClubState = {

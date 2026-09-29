@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PrintRouteImport } from './routes/print'
+import { Route as ScanRouteImport } from './routes/scan'
 import { Route as VerifyRouteImport } from './routes/verify'
 
 const IndexRoute = IndexRouteImport.update({
@@ -23,6 +24,11 @@ const PrintRoute = PrintRouteImport.update({
   path: '/print',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ScanRoute = ScanRouteImport.update({
+  id: '/scan',
+  path: '/scan',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VerifyRoute = VerifyRouteImport.update({
   id: '/verify',
   path: '/verify',
@@ -32,30 +38,34 @@ const VerifyRoute = VerifyRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/print': typeof PrintRoute
+  '/scan': typeof ScanRoute
   '/verify': typeof VerifyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/print': typeof PrintRoute
+  '/scan': typeof ScanRoute
   '/verify': typeof VerifyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/print': typeof PrintRoute
+  '/scan': typeof ScanRoute
   '/verify': typeof VerifyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/print' | '/verify'
+  fullPaths: '/' | '/print' | '/scan' | '/verify'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/print' | '/verify'
-  id: '__root__' | '/' | '/print' | '/verify'
+  to: '/' | '/print' | '/scan' | '/verify'
+  id: '__root__' | '/' | '/print' | '/scan' | '/verify'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PrintRoute: typeof PrintRoute
+  ScanRoute: typeof ScanRoute
   VerifyRoute: typeof VerifyRoute
 }
 
@@ -75,6 +85,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrintRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/scan': {
+      id: '/scan'
+      path: '/scan'
+      fullPath: '/scan'
+      preLoaderRoute: typeof ScanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/verify': {
       id: '/verify'
       path: '/verify'
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PrintRoute: PrintRoute,
+  ScanRoute: ScanRoute,
   VerifyRoute: VerifyRoute,
 }
 export const routeTree = rootRouteImport
