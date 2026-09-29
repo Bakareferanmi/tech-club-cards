@@ -13,6 +13,7 @@ import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } 
 import { toast } from "sonner";
 import { AccessCard } from "@/components/access-card";
 import { CardStage } from "@/components/card-stage";
+import { SectionViewer } from "@/components/section-viewer";
 import { CodeBracketsIcon } from "@/components/card-icons";
 import { Button } from "@/components/ui/button";
 import {
@@ -139,6 +140,7 @@ export function Studio() {
               {members.length} {members.length === 1 ? "card" : "cards"} · 10 / A4
             </span>
             <BulkDialog />
+            <SectionViewer />
             <Button asChild variant="secondary">
               <Link to="/scan">
                 <ScanLine />
