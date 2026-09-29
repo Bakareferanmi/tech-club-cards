@@ -1,25 +1,25 @@
-import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-medium transition-[background-color,color,opacity,transform,box-shadow] duration-[var(--motion-quick)] ease-[var(--ease-out)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-40 active:not-disabled:scale-[0.96] [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-[color,background-color,box-shadow,transform,opacity] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-[0.98]",
   {
     variants: {
       variant: {
-        default: "bg-foreground text-background hover:bg-foreground/90",
-        secondary: "bg-surface text-foreground shadow-border hover:bg-surface-2",
-        outline: "border border-border bg-transparent text-foreground hover:bg-surface",
-        ghost: "text-muted-foreground hover:bg-surface hover:text-foreground",
-        rec: "bg-rec text-foreground hover:bg-rec/90",
+        default: "bg-primary text-primary-fg shadow-sm hover:bg-primary-deep",
+        navy: "bg-navy text-primary-fg shadow-sm hover:opacity-90",
+        secondary: "bg-surface text-fg border border-border hover:bg-paper",
+        outline: "border border-border bg-transparent text-fg hover:bg-surface",
+        ghost: "text-fg hover:bg-surface",
+        danger: "bg-danger text-primary-fg hover:opacity-90",
       },
       size: {
-        default: "h-11 px-5",
-        sm: "h-9 px-3.5 text-xs",
-        lg: "h-12 px-6",
-        icon: "size-11",
-        "icon-sm": "size-9",
+        default: "h-11 px-4",
+        sm: "h-9 px-3 text-xs",
+        lg: "h-12 px-5",
+        icon: "h-11 w-11",
       },
     },
     defaultVariants: {
