@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { uid } from "@/lib/utils";
+import { bindCardSync } from "@/lib/cards-sync";
 
 export type Member = {
   uid: string;
@@ -158,6 +159,7 @@ export function loadClubFromStorage() {
 export function bindClubPersistence() {
   if (typeof window === "undefined") return () => undefined;
   loadClubFromStorage();
+  bindCardSync(useClub);
   return useClub.subscribe((state) => {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshotOf(state)));
   });
