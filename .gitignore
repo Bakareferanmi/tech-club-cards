@@ -6,3 +6,4 @@ screenshots/
 attachments/
 .env*
 artifacts/
+.project_id
