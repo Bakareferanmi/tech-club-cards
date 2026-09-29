@@ -5,5 +5,3 @@ node_modules/
 screenshots/
 attachments/
 .env*
-artifacts/
-.project_id
