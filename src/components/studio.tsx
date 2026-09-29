@@ -282,20 +282,17 @@ function MemberForm({
             />
           </Field>
           <Field label="Role">
-            <select
-              className="h-11 w-full rounded-lg border border-border bg-surface px-3 text-sm text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
+            <Input
+              list="role-options"
               value={draft.role}
               onChange={(e) => patch({ role: e.target.value })}
-            >
+              placeholder="Type or pick a role"
+            />
+            <datalist id="role-options">
               {ROLES.map((r) => (
-                <option key={r} value={r}>
-                  {r}
-                </option>
+                <option key={r} value={r} />
               ))}
-              {draft.role && !(ROLES as readonly string[]).includes(draft.role) ? (
-                <option value={draft.role}>{draft.role}</option>
-              ) : null}
-            </select>
+            </datalist>
           </Field>
         </div>
         <Field label="Session">
