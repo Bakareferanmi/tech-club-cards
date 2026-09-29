@@ -64,9 +64,14 @@ function VerifyPage() {
             </p>
           </div>
         )}
-        <Button asChild variant="secondary">
-          <Link to="/">Open card studio</Link>
-        </Button>
+        <div className="flex flex-wrap justify-center gap-2">
+          <Button asChild>
+            <Link to="/scan">Scan another card</Link>
+          </Button>
+          <Button asChild variant="secondary">
+            <Link to="/">Open card studio</Link>
+          </Button>
+        </div>
       </div>
     </main>
   );

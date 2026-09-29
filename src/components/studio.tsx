@@ -5,6 +5,7 @@ import {
   Pencil,
   Plus,
   Printer,
+  ScanLine,
   Trash2,
   Upload,
 } from "lucide-react";
@@ -138,6 +139,12 @@ export function Studio() {
               {members.length} {members.length === 1 ? "card" : "cards"} · 10 / A4
             </span>
             <BulkDialog />
+            <Button asChild variant="secondary">
+              <Link to="/scan">
+                <ScanLine />
+                Scan card
+              </Link>
+            </Button>
             <Button asChild variant="secondary">
               <Link to="/print">
                 <LayoutGrid />
