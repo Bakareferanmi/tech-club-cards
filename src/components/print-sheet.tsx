@@ -3,7 +3,7 @@ import { AccessCard } from "@/components/access-card";
 import { cardVerifyUrl } from "@/lib/payload";
 import { CARDS_PER_SECTION, sectionOf, type Member } from "@/lib/club-store";
 
-export const CARDS_PER_PAGE = 10;
+export const CARDS_PER_PAGE = 8;
 
 function idNumber(id: string) {
   const match = /(\d+)\s*$/.exec(id.trim());

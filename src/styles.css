@@ -208,7 +208,7 @@
   pointer-events: none;
 }
 
-/* ——— A4 print sheets: 2 × 5 = 10 ID-1 cards ——— */
+/* ——— A4 print sheets: 2 × 4 = 8 ID-1 cards ——— */
 .print-app {
   min-height: 100dvh;
   background: #d9e1ec;
@@ -254,7 +254,7 @@
   height: 100%;
   display: grid;
   grid-template-columns: repeat(2, 85.6mm);
-  grid-template-rows: repeat(5, 54mm);
+  grid-template-rows: repeat(4, 54mm);
   column-gap: 7mm;
   row-gap: 3.5mm;
   justify-content: space-between;

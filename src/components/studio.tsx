@@ -137,7 +137,7 @@ export function Studio() {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <span className="rounded-full bg-paper px-3 py-1 text-xs font-medium text-muted">
-              {members.length} {members.length === 1 ? "card" : "cards"} · 10 / A4
+              {members.length} {members.length === 1 ? "card" : "cards"} · 8 / A4
             </span>
             <BulkDialog />
             <SectionViewer />

@@ -15,7 +15,7 @@ export const Route = createRootRoute({
       { name: "theme-color", content: "#0070F5" },
       {
         name: "description",
-        content: "Issue Tech Club access cards and print 10 per A4 sheet.",
+        content: "Issue Tech Club access cards and print 8 per A4 sheet.",
       },
     ],
     links: [

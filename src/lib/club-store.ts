@@ -26,7 +26,7 @@ export const ROLES = [
 
 export const DEFAULT_SESSION = "2026 / 2027";
 
-export const CARDS_PER_SECTION = 10;
+export const CARDS_PER_SECTION = 8;
 
 export const SEED_MEMBER: Member = {
   uid: "seed-bakare",

@@ -66,7 +66,7 @@ function PrintStudio() {
             <p className="text-sm font-semibold text-navy">A4 print layout</p>
             <p className="text-xs text-muted">
               {members.length} {members.length === 1 ? "card" : "cards"} · {pages.length}{" "}
-              {pages.length === 1 ? "page" : "pages"} · 10 per sheet · ID-1 size
+              {pages.length === 1 ? "page" : "pages"} · 8 per sheet · ID-1 size
             </p>
           </div>
         </div>
