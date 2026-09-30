@@ -1,12 +1,4 @@
-import { forwardRef, useEffect, useState, type ReactNode } from "react";
-import {
-  CalendarFieldIcon,
-  CodeBracketsIcon,
-  IdFieldIcon,
-  PeopleFieldIcon,
-  PhoneScanIcon,
-  UserFieldIcon,
-} from "@/components/card-icons";
+import { forwardRef, useEffect, useState } from "react";
 import { QrMark } from "@/components/qr-mark";
 import { SIGNATURE_FILES, toDataUrl } from "@/lib/signatures";
 
@@ -49,101 +41,76 @@ export const AccessCard = forwardRef<HTMLElement, Props>(function AccessCard(
   const name = data.name.trim() || "Member Name";
   const memberId = data.memberId.trim() || "TECH0000";
   const role = data.role.trim() || "Member";
-  const session = data.session.trim() || "2026 / 2027";
+  const session = (data.session.trim() || "2026/2027").replace(/\s*\/\s*/g, "/");
   const nameClass =
-    name.length > 30
-      ? "access-card__value access-card__value--xs"
-      : name.length > 24
-        ? "access-card__value access-card__value--sm"
-        : "access-card__value";
+    name.length > 19
+      ? "access-card__name access-card__name--xs"
+      : name.length > 15
+        ? "access-card__name access-card__name--sm"
+        : "access-card__name";
 
   return (
     <article ref={ref} className={["access-card", className].filter(Boolean).join(" ")}>
-      <header className="access-card__header">
-        <div className="access-card__brand">
-          <CodeBracketsIcon className="access-card__logo" />
-          <span className="access-card__brand-rule" />
-          <div className="access-card__wordmark">
-            <p className="access-card__title">
-              <span className="access-card__tech">TECH</span>
-              <span className="access-card__club">CLUB</span>
-            </p>
-            <p className="access-card__tagline">LEARN · BUILD · GROW</p>
-          </div>
-        </div>
-        <div className="access-card__motto">
-          <span>BETTER MINDS</span>
-          <span>BIGGER DREAMS</span>
-          <i className="access-card__motto-rule" />
-        </div>
-      </header>
-
-      <div className="access-card__body">
-        <ul className="access-card__fields">
-          <FieldRow icon={<UserFieldIcon />} label="NAME">
-            <span className={nameClass}>{name}</span>
-          </FieldRow>
-          <FieldRow icon={<IdFieldIcon />} label="ID">
-            <span className="access-card__value">{memberId}</span>
-          </FieldRow>
-          <FieldRow icon={<PeopleFieldIcon />} label="ROLE">
-            <span className="access-card__value">{role}</span>
-          </FieldRow>
-          <FieldRow icon={<CalendarFieldIcon />} label="SESSION">
-            <span className="access-card__value">{session}</span>
-          </FieldRow>
-        </ul>
-
-        <aside className="access-card__qr-panel">
-          <div className="access-card__qr-frame">
-            <QrMark value={data.verifyUrl} title={`Verify ${memberId}`} />
-          </div>
-          <div className="access-card__scan">
-            <PhoneScanIcon className="access-card__scan-icon" />
-            <span>SCAN TO VERIFY</span>
-          </div>
-        </aside>
+      <div className="access-card__deco" aria-hidden="true">
+        <i className="access-card__dot access-card__dot--blue" />
+        <i className="access-card__dot access-card__dot--yellow" />
+        <i className="access-card__dot access-card__dot--pink" />
+        <i className="access-card__dot access-card__dot--teal" />
+        <i className="access-card__plus access-card__plus--a" />
+        <i className="access-card__plus access-card__plus--b" />
+        <i className="access-card__plus access-card__plus--c" />
+        <i className="access-card__star-ink" />
+        <i className="access-card__star" />
       </div>
 
-      <footer className="access-card__footer">
-        <SignatureBlock src={gm} alt="General Manager signature" caption="G.M" />
-        <SignatureBlock src={head} alt="Head of Club signature" caption="HEAD OF CLUB" />
-        <SignatureBlock src={principal} alt="Principal signature" caption="PRINCIPAL" />
-      </footer>
-      <div className="access-card__corner" aria-hidden="true" />
+      <div className="access-card__logo">{"</>"}</div>
+      <p className="access-card__title">TECH CLUB</p>
+      <p className="access-card__tagline">better minds, bigger dreams!</p>
+
+      <p className={nameClass}>
+        <span>{name}</span>
+      </p>
+
+      <div className="access-card__tags">
+        <span className="access-card__pill access-card__pill--id">ID {memberId}</span>
+        <span className="access-card__pill access-card__pill--session">SESSION {session}</span>
+        <span className="access-card__pill access-card__pill--role">{role}</span>
+      </div>
+
+      <div className="access-card__qr">
+        <QrMark value={data.verifyUrl} title={`Verify ${memberId}`} />
+      </div>
+      <p className="access-card__scan">SCAN TO VERIFY</p>
+
+      <div className="access-card__sigs">
+        <SignatureBlock src={gm} alt="General Manager signature" caption="G.M" tone="pink" />
+        <SignatureBlock
+          src={head}
+          alt="Head of Club signature"
+          caption="HEAD OF CLUB"
+          tone="blue"
+        />
+        <SignatureBlock
+          src={principal}
+          alt="Principal signature"
+          caption="PRINCIPAL"
+          tone="teal"
+        />
+      </div>
     </article>
   );
 });
-
-function FieldRow({
-  icon,
-  label,
-  children,
-}: {
-  icon: ReactNode;
-  label: string;
-  children: ReactNode;
-}) {
-  return (
-    <li className="access-card__field">
-      <span className="access-card__icon">{icon}</span>
-      <span className="access-card__field-rule" />
-      <div className="access-card__field-text">
-        <span className="access-card__label">{label}</span>
-        {children}
-      </div>
-    </li>
-  );
-}
 
 function SignatureBlock({
   src,
   alt,
   caption,
+  tone,
 }: {
   src: string;
   alt: string;
   caption: string;
+  tone: "pink" | "blue" | "teal";
 }) {
   return (
     <figure className="access-card__sig">
@@ -155,7 +122,9 @@ function SignatureBlock({
         loading="eager"
         decoding="sync"
       />
-      <figcaption className="access-card__sig-cap">{caption}</figcaption>
+      <figcaption className={`access-card__sig-cap access-card__sig-cap--${tone}`}>
+        {caption}
+      </figcaption>
     </figure>
   );
 }
