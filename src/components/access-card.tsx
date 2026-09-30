@@ -1,6 +1,12 @@
-import { forwardRef, useEffect, useState } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { QrMark } from "@/components/qr-mark";
-import { SIGNATURE_FILES, toDataUrl } from "@/lib/signatures";
+import { toDataUrl } from "@/lib/signatures";
 
 export type AccessCardModel = {
   name: string;
@@ -31,100 +37,83 @@ function useEmbeddedSrc(src: string) {
   return url;
 }
 
+/** Text that shrinks to fit its fixed-width slot on the card template. */
+function FitText({
+  children,
+  className,
+  align = "left",
+}: {
+  children: string;
+  className: string;
+  align?: "left" | "center";
+}) {
+  const boxRef = useRef<HTMLSpanElement>(null);
+  const textRef = useRef<HTMLSpanElement>(null);
+  const [scale, setScale] = useState(1);
+
+  useLayoutEffect(() => {
+    const fit = () => {
+      const box = boxRef.current;
+      const text = textRef.current;
+      if (!box || !text) return;
+      const natural = text.offsetWidth;
+      const avail = box.clientWidth;
+      setScale(natural > avail && natural > 0 ? avail / natural : 1);
+    };
+    fit();
+    document.fonts?.ready.then(fit).catch(() => undefined);
+  }, [children]);
+
+  return (
+    <span
+      ref={boxRef}
+      className={`access-card__text access-card__fit access-card__fit--${align} ${className}`}
+    >
+      <span
+        ref={textRef}
+        className="access-card__fit-text"
+        style={{
+          transform: `scale(${scale})`,
+          transformOrigin: align === "center" ? "center center" : "left center",
+        }}
+      >
+        {children}
+      </span>
+    </span>
+  );
+}
+
 export const AccessCard = forwardRef<HTMLElement, Props>(function AccessCard(
   { data, className },
   ref,
 ) {
-  const gm = useEmbeddedSrc(SIGNATURE_FILES.gm);
-  const head = useEmbeddedSrc(SIGNATURE_FILES.headOfClub);
-  const principal = useEmbeddedSrc(SIGNATURE_FILES.principal);
+  const bg = useEmbeddedSrc("/card-template.png");
   const name = data.name.trim() || "Member Name";
   const memberId = data.memberId.trim() || "TECH0000";
   const role = data.role.trim() || "Member";
   const session = (data.session.trim() || "2026/2027").replace(/\s*\/\s*/g, "/");
-  const nameClass =
-    name.length > 19
-      ? "access-card__name access-card__name--xs"
-      : name.length > 15
-        ? "access-card__name access-card__name--sm"
-        : "access-card__name";
 
   return (
     <article ref={ref} className={["access-card", className].filter(Boolean).join(" ")}>
-      <div className="access-card__deco" aria-hidden="true">
-        <i className="access-card__dot access-card__dot--blue" />
-        <i className="access-card__dot access-card__dot--yellow" />
-        <i className="access-card__dot access-card__dot--pink" />
-        <i className="access-card__dot access-card__dot--teal" />
-        <i className="access-card__plus access-card__plus--a" />
-        <i className="access-card__plus access-card__plus--b" />
-        <i className="access-card__plus access-card__plus--c" />
-        <i className="access-card__star-ink" />
-        <i className="access-card__star" />
-      </div>
+      <img className="access-card__bg" src={bg} alt="" draggable={false} decoding="sync" />
 
-      <div className="access-card__logo">{"</>"}</div>
-      <p className="access-card__title">TECH CLUB</p>
-      <p className="access-card__tagline">better minds, bigger dreams!</p>
+      <FitText className="access-card__name">{name}</FitText>
 
-      <p className={nameClass}>
-        <span>{name}</span>
+      <p className="access-card__text access-card__label access-card__label--id">ID</p>
+      <FitText className="access-card__value access-card__value--id">{memberId}</FitText>
+
+      <p className="access-card__text access-card__label access-card__label--session">
+        SESSION
       </p>
+      <FitText className="access-card__value access-card__value--session">{session}</FitText>
 
-      <div className="access-card__tags">
-        <span className="access-card__pill access-card__pill--id">ID {memberId}</span>
-        <span className="access-card__pill access-card__pill--session">SESSION {session}</span>
-        <span className="access-card__pill access-card__pill--role">{role}</span>
-      </div>
+      <FitText className="access-card__role" align="center">
+        {role.toUpperCase()}
+      </FitText>
 
       <div className="access-card__qr">
         <QrMark value={data.verifyUrl} title={`Verify ${memberId}`} />
       </div>
-      <p className="access-card__scan">SCAN TO VERIFY</p>
-
-      <div className="access-card__sigs">
-        <SignatureBlock src={gm} alt="General Manager signature" caption="G.M" tone="pink" />
-        <SignatureBlock
-          src={head}
-          alt="Head of Club signature"
-          caption="HEAD OF CLUB"
-          tone="blue"
-        />
-        <SignatureBlock
-          src={principal}
-          alt="Principal signature"
-          caption="PRINCIPAL"
-          tone="teal"
-        />
-      </div>
     </article>
   );
 });
-
-function SignatureBlock({
-  src,
-  alt,
-  caption,
-  tone,
-}: {
-  src: string;
-  alt: string;
-  caption: string;
-  tone: "pink" | "blue" | "teal";
-}) {
-  return (
-    <figure className="access-card__sig">
-      <img
-        className="access-card__sig-img"
-        src={src}
-        alt={alt}
-        draggable={false}
-        loading="eager"
-        decoding="sync"
-      />
-      <figcaption className={`access-card__sig-cap access-card__sig-cap--${tone}`}>
-        {caption}
-      </figcaption>
-    </figure>
-  );
-}
