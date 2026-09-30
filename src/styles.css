@@ -17,6 +17,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Poppins";
+  src: url("/fonts/poppins-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
+}
+
 @theme {
   --color-bg: #eef2f7;
   --color-surface: #ffffff;
@@ -71,306 +79,107 @@
   border: 0;
 }
 
-/* ——— Access card (ID-1 / CR80: 85.6mm × 54mm) ——— */
+/* ——— Access card (CR80 85.6mm × 54mm, PNG template + live text) ——— */
 .access-card {
-  --ac-blue: #0070f5;
-  --ac-navy: #0b1c48;
-  --ac-border: #4aa6f7;
-  --ac-label: #8b95a8;
-  --ac-muted: #97a1b3;
-  --ac-line: #d8e0ec;
-  --ac-icon-bg: #e8f2ff;
-  --ac-icon: #2b7de8;
-  --ac-qr-border: #c9dff8;
-  --ac-qr-wash: #f3f8ff;
+  --u: 0.05035mm; /* 1 px of the 1700×1070 template */
+  --ac-ink: #111123;
   width: 85.6mm;
   height: 54mm;
   position: relative;
   box-sizing: border-box;
   overflow: hidden;
-  background: #fff;
-  color: var(--ac-navy);
-  border: 0.38mm solid var(--ac-border);
-  border-radius: 3.4mm;
-  font-family: "Montserrat", "Outfit", sans-serif;
-  padding: 2.35mm 3.15mm 1.7mm 3.2mm;
-  display: flex;
-  flex-direction: column;
+  background: transparent;
+  color: var(--ac-ink);
+  font-family: "Poppins", "Montserrat", sans-serif;
+  font-weight: 700;
   print-color-adjust: exact;
   -webkit-print-color-adjust: exact;
 }
 
-.access-card__header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 2mm;
-  flex-shrink: 0;
-}
-
-.access-card__brand {
-  display: flex;
-  align-items: center;
-  gap: 1.7mm;
-  min-width: 0;
-}
-
-.access-card__logo {
-  width: 7.4mm;
-  height: 5.8mm;
-  color: var(--ac-blue);
-  flex-shrink: 0;
-}
-
-.access-card__brand-rule {
-  width: 0.28mm;
-  height: 7.2mm;
-  background: #c5d6ea;
-  flex-shrink: 0;
-}
-
-.access-card__wordmark {
-  min-width: 0;
-}
-
-.access-card__title {
-  margin: 0;
-  display: flex;
-  gap: 1.3mm;
-  line-height: 1;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  font-size: 3.55mm;
-}
-
-.access-card__tech {
-  color: var(--ac-blue);
-}
-
-.access-card__club {
-  color: var(--ac-navy);
-}
-
-.access-card__tagline {
-  margin: 0.7mm 0 0;
-  font-size: 1.35mm;
-  font-weight: 600;
-  letter-spacing: 0.22em;
-  color: var(--ac-muted);
-}
-
-.access-card__motto {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  font-size: 1.42mm;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  color: var(--ac-muted);
-  line-height: 1.35;
-  padding-top: 0.2mm;
-  flex-shrink: 0;
-}
-
-.access-card__motto-rule {
-  display: block;
-  width: 6.4mm;
-  height: 0.32mm;
-  margin-top: 0.7mm;
-  background: var(--ac-blue);
-}
-
-.access-card__body {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 22.4mm;
-  gap: 2.4mm;
-  align-items: stretch;
-  flex: 1;
-  min-height: 0;
-  margin-top: 1.5mm;
-}
-
-.access-card__fields {
-  list-style: none;
-  margin: 0;
-  padding: 0.4mm 0 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-width: 0;
-}
-
-.access-card__field {
-  display: grid;
-  grid-template-columns: 4.7mm 0.28mm minmax(0, 1fr);
-  gap: 1.35mm;
-  align-items: center;
-}
-
-.access-card__icon {
-  width: 4.7mm;
-  height: 4.7mm;
-  border-radius: 50%;
-  background: var(--ac-icon-bg);
-  color: var(--ac-icon);
-  display: grid;
-  place-items: center;
-}
-
-.access-card__icon svg {
-  width: 2.7mm;
-  height: 2.7mm;
-}
-
-.access-card__field-rule {
-  width: 0.28mm;
-  height: 4.4mm;
-  background: #cfe0f5;
-  align-self: center;
-}
-
-.access-card__field-text {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.12mm;
-}
-
-.access-card__label {
-  font-size: 1.22mm;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  color: var(--ac-label);
-  line-height: 1;
-}
-
-.access-card__value {
-  font-size: 2.22mm;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--ac-navy);
-  line-height: 1.15;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.access-card__value--sm {
-  font-size: 1.95mm;
-}
-
-.access-card__value--xs {
-  font-size: 1.72mm;
-}
-
-.access-card__qr-panel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  background: var(--ac-qr-wash);
-  border: 0.28mm solid var(--ac-qr-border);
-  border-radius: 2.1mm;
-  padding: 1.15mm 1.15mm 0.9mm;
-}
-
-.access-card__qr-frame {
-  width: 100%;
-  aspect-ratio: 1;
-  background: #fff;
-  border-radius: 1.1mm;
-  overflow: hidden;
-  display: grid;
-  place-items: center;
-}
-
-.access-card__qr-svg {
+.access-card__bg {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   display: block;
 }
 
-.access-card__scan {
+.access-card__text {
+  position: absolute;
+  margin: 0;
+  line-height: 1.4;
+  font-family: "Poppins", "Montserrat", sans-serif;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--ac-ink);
+}
+
+.access-card__fit {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.7mm;
-  margin-top: 0.7mm;
-  color: var(--ac-blue);
-  font-size: 1.28mm;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+}
+.access-card__fit--left { justify-content: flex-start; }
+.access-card__fit--center { justify-content: center; }
+.access-card__fit-text {
+  display: inline-block;
+  flex: none;
   white-space: nowrap;
 }
 
-.access-card__scan-icon {
-  width: 2.1mm;
-  height: 2.1mm;
+.access-card__name {
+  left: calc(var(--u) * 135.5);
+  top: calc(var(--u) * 249.75);
+  width: calc(var(--u) * 880);
+  height: calc(var(--u) * 147);
+  font-size: calc(var(--u) * 105);
+  letter-spacing: -0.005em;
 }
 
-.access-card__footer {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  margin-top: 1.3mm;
-  padding-top: 1.05mm;
-  border-top: 0.22mm solid var(--ac-line);
-  flex-shrink: 0;
-  position: relative;
-  z-index: 1;
+.access-card__label {
+  top: calc(var(--u) * 471);
+  font-size: calc(var(--u) * 40);
+}
+.access-card__label--id { left: calc(var(--u) * 129.5); color: #fff; }
+.access-card__label--session { left: calc(var(--u) * 381.3); }
+
+.access-card__value {
+  top: calc(var(--u) * 463.65);
+  height: calc(var(--u) * 65.8);
+  font-size: calc(var(--u) * 47);
+}
+.access-card__value--id {
+  left: calc(var(--u) * 187.9);
+  width: calc(var(--u) * 100);
+  color: #fff;
+}
+.access-card__value--session {
+  left: calc(var(--u) * 567.3);
+  width: calc(var(--u) * 262);
 }
 
-.access-card__sig {
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  min-width: 0;
-  padding: 0 1.4mm;
-  overflow: visible;
+.access-card__role {
+  left: calc(var(--u) * 891.5);
+  top: calc(var(--u) * 458.9);
+  width: calc(var(--u) * 280);
+  height: calc(var(--u) * 68.6);
+  font-size: calc(var(--u) * 49);
+  transform: rotate(-7.2deg);
+  transform-origin: center center;
 }
 
-.access-card__sig:first-child {
-  padding-left: 3.4mm;
-}
-
-.access-card__sig + .access-card__sig {
-  border-left: 0.22mm solid var(--ac-line);
-}
-
-.access-card__sig-img {
-  display: block;
-  height: 7.3mm;
-  width: auto;
-  max-width: 23mm;
-  object-fit: contain;
-  object-position: center bottom;
-  margin-bottom: 0.15mm;
-  print-color-adjust: exact;
-  -webkit-print-color-adjust: exact;
-}
-
-.access-card__sig-cap {
-  width: 100%;
-  border-top: 0.22mm solid #c5cedc;
-  padding-top: 0.55mm;
-  text-align: center;
-  font-size: 1.28mm;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  color: var(--ac-muted);
-}
-
-.access-card__corner {
+.access-card__qr {
   position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 8.2mm;
-  height: 6.4mm;
-  background: var(--ac-blue);
-  clip-path: polygon(0 8%, 0 100%, 100% 100%);
-  pointer-events: none;
-  z-index: 0;
+  left: calc(var(--u) * 1230);
+  top: calc(var(--u) * 110);
+  width: calc(var(--u) * 350);
+  height: calc(var(--u) * 350);
+  display: grid;
+  place-items: center;
+}
+.access-card__qr-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .card-stage {
