@@ -66,3 +66,25 @@ export const getCard = createServerFn({ method: "GET" })
     const r = rows[0];
     return r ? { name: r.name, memberId: r.member_id, role: r.role, session: r.session } : null;
   });
+
+export const listCards = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => z.object({ key: z.string() }).parse(data))
+  .handler(async ({ data }) => {
+    assertKey(data.key);
+    const { getSql } = await import("@/lib/db");
+    const sql = await getSql();
+    const rows = await sql<{
+      uid: string;
+      name: string;
+      member_id: string;
+      role: string;
+      session: string;
+    }>`select uid, name, member_id, role, session from cards`;
+    return rows.map((r) => ({
+      uid: r.uid,
+      name: r.name,
+      memberId: r.member_id,
+      role: r.role,
+      session: r.session,
+    }));
+  });
