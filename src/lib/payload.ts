@@ -21,9 +21,9 @@ export function decodePayload(raw: string): CardPayload | null {
     const bytes = Uint8Array.from(bin, (c) => c.charCodeAt(0));
     const json = new TextDecoder().decode(bytes);
     const parsed = JSON.parse(json) as CardPayload;
-    if (!parsed?.n || !parsed?.i) return null;
+    if (!parsed?.i) return null;
     return {
-      n: String(parsed.n),
+      n: String(parsed.n ?? ""),
       i: String(parsed.i),
       r: String(parsed.r ?? ""),
       s: String(parsed.s ?? ""),
@@ -34,7 +34,7 @@ export function decodePayload(raw: string): CardPayload | null {
 }
 
 export function cardVerifyUrl(origin: string, payload: CardPayload): string {
-  const token = encodePayload(payload);
+  const token = encodePayload({ i: payload.i } as CardPayload);
   if (!origin) return `TECHCLUB|${payload.i}|${payload.n}`;
   return `${origin}/verify?p=${encodeURIComponent(token)}`;
 }

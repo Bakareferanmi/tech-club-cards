@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ImageUp, ScanLine } from "lucide-react";
+import { ImageUp } from "lucide-react";
 import jsQR from "jsqr";
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,23 @@ import { decodePayload } from "@/lib/payload";
 export const Route = createFileRoute("/scan")({
   component: ScanPage,
 });
+
+type NativeDetector = {
+  detect: (source: CanvasImageSource) => Promise<{ rawValue: string }[]>;
+};
+
+function makeNativeDetector(): NativeDetector | null {
+  try {
+    const Ctor = (
+      window as unknown as {
+        BarcodeDetector?: new (opts: { formats: string[] }) => NativeDetector;
+      }
+    ).BarcodeDetector;
+    return Ctor ? new Ctor({ formats: ["qr_code"] }) : null;
+  } catch {
+    return null;
+  }
+}
 
 /** Returns the card token if the QR text is a Tech Club verify link. */
 function tokenFromQr(text: string): string | null {
@@ -36,35 +53,59 @@ function ScanPage() {
     let stream: MediaStream | null = null;
     let frame = 0;
     let stopped = false;
+    let busy = false;
     let lastBadAt = 0;
+    const detector = makeNativeDetector();
 
-    function tick() {
+    function readWithJsQr(video: HTMLVideoElement): string | null {
+      const canvas = canvasRef.current;
+      if (!canvas) return null;
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
+      if (!ctx) return null;
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      return jsQR(img.data, img.width, img.height)?.data ?? null;
+    }
+
+    function handleText(text: string): boolean {
+      const token = tokenFromQr(text);
+      if (token) {
+        stopped = true;
+        openCard(token);
+        return true;
+      }
+      if (Date.now() - lastBadAt > 2000) {
+        lastBadAt = Date.now();
+        setError("That QR code is not a Tech Club access card.");
+      }
+      return false;
+    }
+
+    async function tick() {
       if (stopped) return;
       const video = videoRef.current;
-      const canvas = canvasRef.current;
-      if (video && canvas && video.readyState === video.HAVE_ENOUGH_DATA) {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        const ctx = canvas.getContext("2d", { willReadFrequently: true });
-        if (ctx) {
-          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-          const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          const hit = jsQR(img.data, img.width, img.height);
-          if (hit?.data) {
-            const token = tokenFromQr(hit.data);
-            if (token) {
-              stopped = true;
-              openCard(token);
-              return;
+      if (video && video.readyState === video.HAVE_ENOUGH_DATA && !busy) {
+        busy = true;
+        try {
+          let text: string | null = null;
+          if (detector) {
+            try {
+              const codes = await detector.detect(video);
+              text = codes[0]?.rawValue ?? null;
+            } catch {
+              text = null;
             }
-            if (Date.now() - lastBadAt > 2000) {
-              lastBadAt = Date.now();
-              setError("That QR code is not a Tech Club access card.");
-            }
+          } else {
+            text = readWithJsQr(video);
           }
+          if (text && handleText(text)) return;
+        } finally {
+          busy = false;
         }
       }
-      frame = requestAnimationFrame(tick);
+      if (!stopped) frame = requestAnimationFrame(() => void tick());
     }
 
     async function start() {
@@ -82,7 +123,7 @@ function ScanPage() {
         video.srcObject = stream;
         await video.play();
         setCameraReady(true);
-        frame = requestAnimationFrame(tick);
+        frame = requestAnimationFrame(() => void tick());
       } catch {
         setError("Camera is blocked. Allow camera access in your browser, or choose a photo of the card instead.");
       }
